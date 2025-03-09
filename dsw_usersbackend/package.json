@@ -15,6 +15,14 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node http/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "glob": "^11.0.1",
+    "mssql": "^11.0.1",
+    "path": "^0.12.7",
+    "Router": "^2.1.0"
   }
 }
