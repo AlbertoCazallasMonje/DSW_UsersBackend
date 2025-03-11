@@ -6,8 +6,8 @@ class UserRegistrator {
         this._userRepository = userRepository;
     }
 
-    async Execute({dni, name, lastName, age, email, address, country}) {
-        const user = UserDomain.Create({dni, name, lastName, age, email, address, country});
+    async Execute({dni, name, lastName, age, email, password, address, country}) {
+        const user = UserDomain.Create({dni, name, lastName, age, email, password, address, country});
         await this._userRepository.Create(user);
     }
 }

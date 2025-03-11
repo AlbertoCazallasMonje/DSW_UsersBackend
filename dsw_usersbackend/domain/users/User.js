@@ -1,35 +1,51 @@
 class User {
-    constructor({ dni, name, lastName, age, email, address, country }) {
+    constructor({dni, name, lastName, age, email, password, address, country, lastLogin}) {
         this.setDni(dni);
         this.setName(name);
         this.setLastName(lastName);
         this.setAge(age);
         this.setEmail(email);
+        this.setPassword(password);
         this.setAddress(address);
         this.setCountry(country);
+        this._lastLogin = lastLogin;
     }
 
     // Getters
     getDni() {
         return this._dni;
     }
+
     getName() {
         return this._name;
     }
+
     getLastName() {
         return this._lastName;
     }
+
     getAge() {
         return this._age;
     }
+
     getEmail() {
         return this._email;
     }
+
+    getPassword() {
+        return this._password;
+    }
+
     getAddress() {
         return this._address;
     }
+
     getCountry() {
         return this._country;
+    }
+
+    getLastLogin() {
+        return this._lastLogin;
     }
 
     // Setters con validación
@@ -86,6 +102,19 @@ class User {
         this._email = email;
     }
 
+    setPassword(password) {
+        if (!password) {
+            throw new Error('User password is required');
+        }
+        if (!this._validatePassword(password)) {
+            throw new Error('Password must contain at least one uppercase letter, one lowercase letter, one number and one special character');
+        }
+        if (password.length < 8) {
+            throw new Error('Password must be at least 8 characters long');
+        }
+        this._password = password
+    }
+
     setAddress(address) {
         if (!address) {
             throw new Error('User address is required');
@@ -103,9 +132,18 @@ class User {
         this._country = country.toUpperCase();
     }
 
+    set lastLogin(lastLogin) {
+        this._lastLogin = lastLogin;
+    }
+
     _validateEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
+    }
+
+    _validatePassword(password) {
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+        return passwordRegex.test(password);
     }
 }
 
