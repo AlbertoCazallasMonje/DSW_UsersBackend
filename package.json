@@ -1,0 +1,20 @@
+{
+  "name": "dsw_usersbackend",
+  "version": "1.0.0",
+  "description": "Users Backend for Orion Frontend",
+  "homepage": "https://github.com/AlbertoCazallasMonje/DSW_UsersBackend#readme",
+  "bugs": {
+    "url": "https://github.com/AlbertoCazallasMonje/DSW_UsersBackend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlbertoCazallasMonje/DSW_UsersBackend.git"
+  },
+  "license": "ISC",
+  "author": "Alberto Cazallas Monje",
+  "type": "commonjs",
+  "main": "Http/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
