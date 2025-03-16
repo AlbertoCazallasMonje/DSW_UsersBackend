@@ -6,8 +6,10 @@ const router = express.Router();
 // Users
 const {UserRegister} = require('../../Application/Users/Register/UserRegister');
 const {UserLogger} = require('../../Application/Users/Logger/UserLogger');
+const {UserUpdater} = require('../../Application/Users/Updater/UserUpdater');
 
 // Establish the route for each use case
 // Users
 router.post('/register', UserRegister);
 router.post('/login', UserLogger);
+router.put('/update', UserUpdater);

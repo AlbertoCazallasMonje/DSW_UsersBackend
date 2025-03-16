@@ -6,6 +6,8 @@ const app = express();
 const router = express.Router();
 const UserController = require('./Users/UserController');
 const userController = new UserController();
+const ActionController = require('./Actions/ActionController');
+const actionController = new ActionController();
 const cors = require('cors');
 app.use(cors());
 app.use(express.json());
@@ -18,7 +20,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Users
 router.post('/register', userController.Register.bind(userController));
 router.post('/login', userController.Login.bind(userController));
+router.put('/update', userController.Update.bind(userController));
 
+// Actions
+router.post('/action', actionController.RequestActionToken.bind(actionController));
 
 // Initialize Server
 const port = config.server.port;
