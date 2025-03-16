@@ -2,6 +2,8 @@ const UserRegister = require('../../Application/Users/Register/UserRegister');
 const UserLogger = require('../../Application/Users/Logger/UserLogger');
 const UserRepository = require('../../Infrastructure/Users/UserRepository');
 const UserUpdater = require("../../Application/Users/Updater/UserUpdater");
+const SessionRepository = require("../../Infrastructure/Sessions/SessionRepository");
+const UserLoggerout = require("../../Application/Users/Loggerout/UserLoggerout");
 
 class UserController {
     async Register(req, res) {
@@ -33,6 +35,19 @@ class UserController {
             const userUpdater = new UserUpdater(userRepository);
             await userUpdater.Execute(req.body);
             res.status(200).json({message: 'User updated successfully'});
+        } catch (error) {
+            res.status(400).json({error: error.message});
+        }
+    }
+
+    async Logout(req, res) {
+        try {
+            const {dni, sessionToken} = req.body;
+            const userRepository = new UserRepository();
+            const sessionRepository = new SessionRepository();
+            const userLoggerout = new UserLoggerout(userRepository, sessionRepository);
+            const result = await userLoggerout.Execute({dni, sessionToken});
+            res.status(200).json(result);
         } catch (error) {
             res.status(400).json({error: error.message});
         }
