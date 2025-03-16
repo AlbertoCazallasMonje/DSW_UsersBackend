@@ -17,6 +17,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes for each use case
 // Users
 router.post('/register', userController.Register.bind(userController));
+router.post('/login', userController.Login.bind(userController));
 
 
 // Initialize Server
