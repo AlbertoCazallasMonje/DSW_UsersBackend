@@ -14,6 +14,10 @@ class IActionRepository {
     async findActionByCode(code) {
         throw new Error('Error finding action by code.');
     }
+
+    async findActionById(actionId) {
+        throw new Error('Error finding action by ID.');
+    }
 }
 
 module.exports = IActionRepository;

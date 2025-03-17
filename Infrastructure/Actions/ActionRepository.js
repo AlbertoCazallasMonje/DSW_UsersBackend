@@ -21,6 +21,24 @@ class ActionRepository extends IActionRepository {
         }
     }
 
+    async findActionById(actionId) {
+        try {
+            let pool = await sql.connect(sqlConfig.config);
+            const result = await pool.request()
+                .input('actionId', sql.UniqueIdentifier, actionId)
+                .query(`
+                    SELECT TOP 1 *
+                    FROM actions
+                    WHERE id = @actionId
+                `);
+            await pool.close();
+            return result.recordset.length > 0 ? result.recordset[0] : null;
+        } catch (err) {
+            console.error('SQL error in findActionById', err);
+            throw err;
+        }
+    }
+
     async createActionToken(actionToken) {
         try {
             let pool = await sql.connect(sqlConfig.config);
