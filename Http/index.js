@@ -22,6 +22,7 @@ router.post('/register', userController.Register.bind(userController));
 router.post('/login', userController.Login.bind(userController));
 router.put('/update', userController.Update.bind(userController));
 router.post('/logout', userController.Logout.bind(userController));
+router.delete('/delete', userController.DeleteAccount.bind(userController));
 
 // Actions
 router.post('/action', actionController.RequestActionToken.bind(actionController));

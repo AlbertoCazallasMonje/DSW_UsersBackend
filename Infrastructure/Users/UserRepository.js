@@ -89,6 +89,22 @@ class UserRepository extends IUserRepository {
             throw err;
         }
     }
+
+    async Delete(dni) {
+        try {
+            let pool = await sql.connect(sqlConfig.config);
+            await pool.request()
+                .input('u_dni', sql.NVarChar(9), dni)
+                .query(`
+                    DELETE FROM users
+                    WHERE u_dni = @u_dni
+                `);
+            await pool.close();
+        } catch (err) {
+            console.error('SQL error in Delete', err);
+            throw err;
+        }
+    }
 }
 
 module.exports = UserRepository;

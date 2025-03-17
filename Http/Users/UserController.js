@@ -4,6 +4,7 @@ const UserRepository = require('../../Infrastructure/Users/UserRepository');
 const UserUpdater = require("../../Application/Users/Updater/UserUpdater");
 const SessionRepository = require("../../Infrastructure/Sessions/SessionRepository");
 const UserLoggerout = require("../../Application/Users/Loggerout/UserLoggerout");
+const UserDeleter = require("../../Application/Users/Deleter/UserDeleter");
 
 class UserController {
     async Register(req, res) {
@@ -50,6 +51,18 @@ class UserController {
             res.status(200).json(result);
         } catch (error) {
             res.status(400).json({error: error.message});
+        }
+    }
+
+    async DeleteAccount(req, res) {
+        try {
+            const { dni, sessionToken, actionToken } = req.body;
+            const userRepository = new UserRepository();
+            const userDeleteAccount = new UserDeleter(userRepository);
+            const result = await userDeleteAccount.Execute({ dni, sessionToken, actionToken });
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
         }
     }
 }

@@ -14,6 +14,10 @@ class IUserRepository {
     async GetByDni(dni) {
         throw new Error('Error while getting an user by DNI.');
     }
+
+    async Delete(dni){
+        throw new Error('Error while deleting an user.');
+    }
 }
 
 module.exports = IUserRepository;
