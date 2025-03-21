@@ -16,8 +16,8 @@ class UserUpdater {
         await sessionValidator.Execute(dni, token);
 
         const actionRepo = new ActionRepository();
-        const actionValidator = new ActionTokenValidator(actionRepo, 'UPDATE-USER');
-        await actionValidator.Execute(actionToken);
+        const actionValidator = new ActionTokenValidator(actionRepo);
+        await actionValidator.Execute(actionToken, 'UPDATE-USER');
 
         if (!password) {
             const currentUser = await this._userRepository.GetByDni(dni);
