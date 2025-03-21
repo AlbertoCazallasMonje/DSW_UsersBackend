@@ -5,6 +5,7 @@ const UserUpdater = require("../../Application/Users/Updater/UserUpdater");
 const SessionRepository = require("../../Infrastructure/Sessions/SessionRepository");
 const UserLoggerout = require("../../Application/Users/Loggerout/UserLoggerout");
 const UserDeleter = require("../../Application/Users/Deleter/UserDeleter");
+const UserFinder = require("../../Application/Users/Finder/UserFinder");
 
 class UserController {
     async Register(req, res) {
@@ -56,13 +57,25 @@ class UserController {
 
     async DeleteAccount(req, res) {
         try {
-            const { dni, sessionToken, actionToken } = req.body;
+            const {dni, sessionToken, actionToken} = req.body;
             const userRepository = new UserRepository();
             const userDeleteAccount = new UserDeleter(userRepository);
-            const result = await userDeleteAccount.Execute({ dni, sessionToken, actionToken });
+            const result = await userDeleteAccount.Execute({dni, sessionToken, actionToken});
             res.status(200).json(result);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            res.status(400).json({error: error.message});
+        }
+    }
+
+    async FindUser(req, res) {
+        try {
+            const {dni, sessionToken, actionToken} = req.body;
+            const userRepository = new UserRepository();
+            const userFinder = new UserFinder(userRepository);
+            const result = await userFinder.Execute(dni, sessionToken, actionToken);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(400).json({error: error.message});
         }
     }
 }
