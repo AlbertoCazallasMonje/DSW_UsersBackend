@@ -44,11 +44,10 @@ class UserController {
 
     async Logout(req, res) {
         try {
-            const {dni, sessionToken} = req.body;
-            const userRepository = new UserRepository();
+            const {sessionToken} = req.body;
             const sessionRepository = new SessionRepository();
-            const userLoggerout = new UserLoggerout(userRepository, sessionRepository);
-            const result = await userLoggerout.Execute({dni, sessionToken});
+            const userLoggerout = new UserLoggerout(sessionRepository);
+            const result = await userLoggerout.Execute({sessionToken});
             res.status(200).json(result);
         } catch (error) {
             res.status(400).json({error: error.message});
@@ -57,10 +56,10 @@ class UserController {
 
     async DeleteAccount(req, res) {
         try {
-            const {dni, sessionToken, actionToken} = req.body;
+            const {sessionToken, actionToken} = req.body;
             const userRepository = new UserRepository();
             const userDeleteAccount = new UserDeleter(userRepository);
-            const result = await userDeleteAccount.Execute({dni, sessionToken, actionToken});
+            const result = await userDeleteAccount.Execute({sessionToken, actionToken});
             res.status(200).json(result);
         } catch (error) {
             res.status(400).json({error: error.message});
@@ -69,10 +68,10 @@ class UserController {
 
     async FindUser(req, res) {
         try {
-            const {dni, sessionToken, actionToken} = req.body;
+            const {sessionToken, actionToken} = req.body;
             const userRepository = new UserRepository();
             const userFinder = new UserFinder(userRepository);
-            const result = await userFinder.Execute(dni, sessionToken, actionToken);
+            const result = await userFinder.Execute(sessionToken, actionToken);
             res.status(200).json(result);
         } catch (error) {
             res.status(400).json({error: error.message});

@@ -10,23 +10,26 @@ class UserUpdater {
     }
 
 
-    async Execute({token, actionToken, dni, name, lastName, age, email, password, address, country}) {
+    async Execute({token, actionToken, dni, name, lastName, age, email, address, country}) {
         const sessionRepo = new SessionRepository();
         const sessionValidator = new SessionTokenValidator(sessionRepo);
-        await sessionValidator.Execute(dni, token);
+        const session = await sessionValidator.Execute(token);
+
+        if (!session) {
+            throw new Error('Invalid session.');
+        }
 
         const actionRepo = new ActionRepository();
         const actionValidator = new ActionTokenValidator(actionRepo);
         await actionValidator.Execute(actionToken, 'UPDATE-USER');
 
-        if (!password) {
-            const currentUser = await this._userRepository.GetByDni(dni);
-            if (!currentUser) {
-                throw new Error('User not found.');
-            }
-            password = currentUser.u_password;
+        const currentUser = await this._userRepository.GetByDni(session.u_dni);
+        if (!currentUser) {
+            throw new Error('User not found.');
         }
-        const updatedUser = UserDomain.Create({dni, name, lastName, age, email, password, address, country});
+
+        const password = currentUser.u_password;
+        const updatedUser = UserDomain.Create({dni, name, lastName, age, email, password , address, country});
         await this._userRepository.Update(updatedUser);
     }
 }
