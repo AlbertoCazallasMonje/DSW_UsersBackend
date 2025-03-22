@@ -35,6 +35,7 @@ class UserRepository extends IUserRepository {
                 .input('u_lastName', sql.NVarChar(100), user.getLastName())
                 .input('u_age', sql.TinyInt, user.getAge())
                 .input('u_email', sql.NVarChar(100), user.getEmail())
+                .input('u_password', sql.NVarChar(100), user.getPassword())
                 .input('u_address', sql.NVarChar(100), user.getAddress())
                 .input('u_country', sql.Char(2), user.getCountry())
                 .query(`
@@ -43,6 +44,7 @@ class UserRepository extends IUserRepository {
                         u_lastName = @u_lastName,
                         u_age      = @u_age,
                         u_email    = @u_email,
+                        u_password = @u_password,
                         u_address  = @u_address,
                         u_country  = @u_country
                     WHERE u_dni = @u_dni
@@ -60,7 +62,7 @@ class UserRepository extends IUserRepository {
             let result = await pool.request()
                 .input('u_dni', sql.NVarChar(9), dni)
                 .query(`
-                    SELECT u_dni, u_name, u_lastName, u_age, u_email, u_address, u_country
+                    SELECT u_dni, u_name, u_lastName, u_age, u_email, u_password, u_address, u_country
                     FROM users
                     WHERE u_dni = @u_dni
                 `);

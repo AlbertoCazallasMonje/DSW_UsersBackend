@@ -1,23 +1,25 @@
 const SessionTokenValidator = require('../../Sessions/SessionTokenValidator/SessionTokenValidator');
 
 class UserLoggerout {
-    constructor(userRepository, sessionRepository) {
-        this._userRepository = userRepository;
+    constructor(sessionRepository) {
         this._sessionRepository = sessionRepository;
     }
 
-    async Execute({ dni, sessionToken }) {
-
+    async Execute({ sessionToken }) {
         const sessionValidator = new SessionTokenValidator(this._sessionRepository);
-        await sessionValidator.Execute(dni, sessionToken);
+        let session;
 
-        const session = await this._sessionRepository.findByUserDni(dni);
-        if (!session) {
-            throw new Error('Session not found.');
+        try {
+            session = await sessionValidator.Execute(sessionToken);
+        } catch (error) {
+            session = await this._sessionRepository.findBySessionToken(sessionToken);
         }
 
-        session.markUsed();
-        await this._sessionRepository.updateRefreshToken(session);
+        if (session) {
+            session.markUsed();
+
+            await this._sessionRepository.deleteSessionToken(session);
+        }
 
         return { message: 'Session closed successfully' };
     }

@@ -46,7 +46,7 @@ class ActionRepository extends IActionRepository {
                 .input('id', sql.UniqueIdentifier, actionToken.id)
                 .input('refresh_token_id', sql.UniqueIdentifier, actionToken.refreshTokenId)
                 .input('action_id', sql.UniqueIdentifier, actionToken.actionId)
-                .input('token', sql.NVarChar(50), actionToken.token)
+                .input('token', sql.NVarChar(100), actionToken.token)
                 .query(`
                     INSERT INTO action_tokens (id, refresh_token_id, action_id, token)
                     VALUES (@id, @refresh_token_id, @action_id, @token)
@@ -62,7 +62,7 @@ class ActionRepository extends IActionRepository {
         try {
             let pool = await sql.connect(sqlConfig.config);
             const result = await pool.request()
-                .input('token', sql.NVarChar(50), token)
+                .input('token', sql.NVarChar(100), token)
                 .query(`
                     SELECT TOP 1 *
                     FROM action_tokens

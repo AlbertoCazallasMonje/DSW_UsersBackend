@@ -3,21 +3,29 @@ class SessionTokenValidator {
         this._sessionRepository = sessionRepository;
     }
 
-    async Execute(u_dni, providedSessionToken) {
-        const session = await this._sessionRepository.findByUserDni(u_dni);
+    async Execute(providedSessionToken) {
+        const session = await this._sessionRepository.findBySessionToken(providedSessionToken);
         if (!session) {
             throw new Error('Session not found.');
         }
 
-        const expectedSessionToken = session.generateSessionToken();
-        if (providedSessionToken !== expectedSessionToken) {
+        if (session.sessionToken !== providedSessionToken) {
             throw new Error('Invalid session token.');
         }
 
-        if (new Date() > new Date(session.expiresAt)) {
-            throw new Error('Session expired.');
+        if (new Date() > new Date(session.sessionTokenExpiresAt)) {
+            throw new Error('Session token expired.');
         }
-        return true;
+
+        if (new Date() > new Date(session.expiresAt)) {
+            throw new Error('Refresh token expired.');
+        }
+
+        if (session.used) {
+            throw new Error('Session token already used.');
+        }
+
+        return session;
     }
 }
 
