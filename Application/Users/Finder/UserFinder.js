@@ -2,7 +2,6 @@ const SessionRepository = require("../../../Infrastructure/Sessions/SessionRepos
 const SessionTokenValidator = require("../../Sessions/SessionTokenValidator/SessionTokenValidator");
 const ActionRepository = require("../../../Infrastructure/Actions/ActionRepository");
 const ActionTokenValidator = require("../../Actions/ActionTokenValidator/ActionTokenValidator");
-const UserUpdateResponse = require("../UserUpdateResponse");
 
 class UserFinder {
     constructor(userRepository) {
