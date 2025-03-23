@@ -8,6 +8,8 @@ const UserController = require('./Users/UserController');
 const userController = new UserController();
 const ActionController = require('./Actions/ActionController');
 const actionController = new ActionController();
+const SessionController = require('./Session/SessionController');
+const sessionController = new SessionController();
 const cors = require('cors');
 app.use(cors());
 app.use(express.json());
@@ -27,6 +29,9 @@ router.get('/findUser', userController.FindUser.bind(userController));
 
 // Actions
 router.post('/action', actionController.RequestActionToken.bind(actionController));
+
+// Session
+router.post('/session/validate', sessionController.ValidateToken.bind(sessionController));
 
 // Initialize Server
 const port = config.server.port;
