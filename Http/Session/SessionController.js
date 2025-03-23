@@ -7,6 +7,8 @@ class SessionController {
         try {
             const sessionRepository = new SessionRepository();
             const sessionValidator = new SessionTokenValidator(sessionRepository);
+            await sessionValidator.Execute(req.body.sessionToken);
+
             res.status(200).json({message: 'Token is valid'});
         } catch (error) {
             res.status(400).json({error: error.message});
