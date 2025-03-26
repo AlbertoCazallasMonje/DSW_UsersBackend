@@ -17,4 +17,4 @@ router.post('/login', UserLogger);
 router.put('/update', UserUpdater);
 router.post('/logout', UserLoggerout);
 router.delete('/delete', UserDeleter);
-router.get('/loadUser', UserLoader);
+router.post('/loadUser', UserLoader);

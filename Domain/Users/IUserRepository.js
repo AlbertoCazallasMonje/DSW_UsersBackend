@@ -18,6 +18,10 @@ class IUserRepository {
     async Delete(dni){
         throw new Error('Error while deleting an user.');
     }
+
+    async GetAllUserData(dni){
+        throw new Error('Error while getting all data.');
+    }
 }
 
 module.exports = IUserRepository;

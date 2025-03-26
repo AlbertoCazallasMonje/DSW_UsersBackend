@@ -23,13 +23,14 @@ class UserUpdater {
         const actionValidator = new ActionTokenValidator(actionRepo);
         await actionValidator.Execute(actionToken, 'UPDATE-USER');
 
-        const currentUser = await this._userRepository.GetByDni(session.u_dni);
+        const currentUser = await this._userRepository.GetAllUserData(dni);
         if (!currentUser) {
             throw new Error('User not found.');
         }
 
         const password = currentUser.u_password;
-        const updatedUser = UserDomain.Create({dni, name, lastName, age, email, password , address, country});
+        const isAdmin = currentUser.is_admin;
+        const updatedUser = UserDomain.Create({dni, name, lastName, age, email, password , address, country, isAdmin});
         await this._userRepository.Update(updatedUser);
     }
 }

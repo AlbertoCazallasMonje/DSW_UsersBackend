@@ -107,6 +107,24 @@ class UserRepository extends IUserRepository {
             throw err;
         }
     }
+
+    async GetAllUserData(dni){
+        try {
+            let pool = await sql.connect(sqlConfig.config);
+            let result = await pool.request()
+                .input('u_dni', sql.NVarChar(9), dni)
+                .query(`
+                    SELECT u_dni, u_name, u_lastName, u_age, u_email, u_password, u_address, u_country, is_admin
+                    FROM users
+                    WHERE u_dni = @u_dni
+                `);
+            await pool.close();
+            return result.recordset.length > 0 ? result.recordset[0] : null;
+        } catch (err) {
+            console.error('SQL error', err);
+            throw err;
+        }
+    }
 }
 
 module.exports = UserRepository;
