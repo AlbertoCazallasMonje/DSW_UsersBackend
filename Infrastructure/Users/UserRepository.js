@@ -125,6 +125,25 @@ class UserRepository extends IUserRepository {
             throw err;
         }
     }
+
+    async UpdateUserPassword(dni, newHashedPassword) {
+        try {
+            let pool = await sql.connect(sqlConfig.config);
+            await pool.request()
+                .input('u_dni', sql.NVarChar(9), dni)
+                .input('u_password', sql.NVarChar(100), newHashedPassword)
+                .query(`
+                UPDATE users
+                SET u_password = @u_password
+                WHERE u_dni = @u_dni
+            `);
+            await pool.close();
+        } catch (err) {
+            console.error('SQL error in updateUserPassword', err);
+            throw err;
+        }
+    }
+
 }
 
 module.exports = UserRepository;
