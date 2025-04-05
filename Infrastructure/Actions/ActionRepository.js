@@ -92,6 +92,69 @@ class ActionRepository extends IActionRepository {
             throw err;
         }
     }
+
+    async createPasswordResetToken(passwordResetToken) {
+        try {
+            let pool = await sql.connect(sqlConfig.config);
+            await pool.request()
+                .input('id', sql.UniqueIdentifier, passwordResetToken.id)
+                .input('action_id', sql.UniqueIdentifier, passwordResetToken.actionId)
+                .input('password_token', sql.NVarChar(100), passwordResetToken.token)
+                .input('email', sql.NVarChar(200), passwordResetToken.email)
+                .input('expires_at', sql.DateTime2, passwordResetToken.expiresAt)
+                .query(`
+                    INSERT INTO password_resets (id, action_id, password_token, email, expires_at)
+                    VALUES (@id, @action_id, @password_token, @email, @expires_at)
+                `);
+            await pool.close();
+        } catch (err) {
+            console.error('SQL error in createPasswordResetToken', err);
+            throw err;
+        }
+    }
+
+    async validatePasswordResetToken(token) {
+        try {
+            let pool = await sql.connect(sqlConfig.config);
+            const result = await pool.request()
+                .input('password_token', sql.NVarChar(100), token)
+                .query(`
+                SELECT TOP 1 *
+                FROM password_resets
+                WHERE password_token = @password_token
+            `);
+
+            if (result.recordset.length === 0) {
+                throw new Error('Token de recuperación no encontrado.');
+            }
+
+            const resetToken = result.recordset[0];
+
+            if (resetToken.used) {
+                throw new Error('El token ya ha sido utilizado.');
+            }
+
+            const now = new Date();
+            if (new Date(resetToken.expires_at) < now) {
+                throw new Error('El token ha expirado.');
+            }
+
+            await pool.request()
+                .input('id', sql.UniqueIdentifier, resetToken.id)
+                .query(`
+                UPDATE password_resets
+                SET used = 1
+                WHERE id = @id
+            `);
+            await pool.close();
+
+            return resetToken;
+        } catch (err) {
+            console.error('SQL error in validatePasswordResetToken', err);
+            throw err;
+        }
+    }
+
 }
 
 module.exports = ActionRepository;

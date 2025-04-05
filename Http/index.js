@@ -1,4 +1,5 @@
 const config = require('../App/Config/Config');
+require('dotenv').config();
 const express = require('express');
 const swaggerDocs = require("../App/Docs/SwaggerDocs");
 const swaggerUi = require("swagger-ui-express");
@@ -30,6 +31,8 @@ router.post('/findUser', userController.FindUser.bind(userController));
 // Actions
 router.post('/action', actionController.RequestActionToken.bind(actionController));
 router.post('/action/validate', actionController.ValidateActionToken.bind(actionController));
+router.post('/action/reset', actionController.RequestPasswordReset.bind(actionController));
+router.get('/action/resetValidate/:token', actionController.ValidatePasswordResetToken.bind(actionController));
 
 // Session
 router.post('/session/validate', sessionController.ValidateToken.bind(sessionController));
