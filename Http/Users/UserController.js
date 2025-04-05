@@ -6,6 +6,8 @@ const SessionRepository = require("../../Infrastructure/Sessions/SessionReposito
 const UserLoggerout = require("../../Application/Users/Loggerout/UserLoggerout");
 const UserDeleter = require("../../Application/Users/Deleter/UserDeleter");
 const UserFinder = require("../../Application/Users/Finder/UserFinder");
+const ActionRepository = require("../../Infrastructure/Actions/ActionRepository");
+const UserPasswordReseter = require("../../Application/Users/Reseter/UserPasswordReseter");
 
 class UserController {
     async Register(req, res) {
@@ -73,6 +75,26 @@ class UserController {
             const userFinder = new UserFinder(userRepository);
             const result = await userFinder.Execute(sessionToken, actionToken);
             res.status(200).json(result);
+        } catch (error) {
+            res.status(400).json({error: error.message});
+        }
+    }
+
+    async ResetPassword(req, res) {
+        try {
+
+            const {actionToken} = req.params;
+
+            const {newPassword} = req.body;
+
+            const userRepository = new UserRepository();
+            const actionRepository = new ActionRepository();
+
+            const userPasswordReseter = new UserPasswordReseter(userRepository, actionRepository);
+
+            await userPasswordReseter.Execute({actionToken, newPassword});
+
+            res.status(200).json({message: 'Password successfully updated.'});
         } catch (error) {
             res.status(400).json({error: error.message});
         }

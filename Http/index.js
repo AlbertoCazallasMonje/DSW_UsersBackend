@@ -27,6 +27,7 @@ router.put('/update', userController.Update.bind(userController));
 router.post('/logout', userController.Logout.bind(userController));
 router.delete('/delete', userController.DeleteAccount.bind(userController));
 router.post('/findUser', userController.FindUser.bind(userController));
+router.put('/passwordUpdate/:actionToken', userController.ResetPassword.bind(userController));
 
 // Actions
 router.post('/action', actionController.RequestActionToken.bind(actionController));

@@ -57,7 +57,7 @@ class ActionController {
             const passwordTokenGenerator = new PasswordTokenGenerator(actionRepo, userRepo);
 
             const resetToken = await passwordTokenGenerator.Execute({email, actionCode});
-            const resetUrl = `${process.env.REACT_APP_FRONT_URL}/${resetToken}`;
+            const resetUrl = `${process.env.REACT_APP_FRONT_URL}/reset/${resetToken}`;
             await sendEmail({
                 to: email,
                 subject: 'Password Recovery',
