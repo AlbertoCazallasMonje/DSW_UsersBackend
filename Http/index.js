@@ -28,6 +28,7 @@ router.post('/logout', userController.Logout.bind(userController));
 router.delete('/delete', userController.DeleteAccount.bind(userController));
 router.post('/findUser', userController.FindUser.bind(userController));
 router.put('/passwordUpdate/:actionToken', userController.ResetPassword.bind(userController));
+router.post('/findByEmail', userController.FindUserByEmail.bind(userController));
 
 // Actions
 router.post('/action', actionController.RequestActionToken.bind(actionController));
@@ -43,4 +44,4 @@ const port = config.server.port;
 const server = app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
-server.timeout = 0;
+server.timeout = 1500000;

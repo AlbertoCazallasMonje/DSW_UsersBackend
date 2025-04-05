@@ -8,6 +8,7 @@ const UserDeleter = require("../../Application/Users/Deleter/UserDeleter");
 const UserFinder = require("../../Application/Users/Finder/UserFinder");
 const ActionRepository = require("../../Infrastructure/Actions/ActionRepository");
 const UserPasswordReseter = require("../../Application/Users/Reseter/UserPasswordReseter");
+const UserEmailFinder = require("../../Application/Users/EmailFinder/UserEmailFinder");
 
 class UserController {
     async Register(req, res) {
@@ -95,6 +96,21 @@ class UserController {
             await userPasswordReseter.Execute({actionToken, newPassword});
 
             res.status(200).json({message: 'Password successfully updated.'});
+        } catch (error) {
+            res.status(400).json({error: error.message});
+        }
+    }
+
+    async FindUserByEmail(req, res) {
+        try {
+            const {sessionToken, findReceiverToken, email} = req.body;
+
+            const userRepository = new UserRepository();
+            const userEmailFinder = new UserEmailFinder(userRepository);
+            const result = await userEmailFinder.Execute(sessionToken, findReceiverToken, email);
+
+            res.status(200).json({ u_dni: result });
+
         } catch (error) {
             res.status(400).json({error: error.message});
         }
