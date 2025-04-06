@@ -62,7 +62,7 @@ class UserRepository extends IUserRepository {
             let result = await pool.request()
                 .input('u_dni', sql.NVarChar(9), dni)
                 .query(`
-                    SELECT u_dni, u_name, u_lastName, u_age, u_email, u_address, u_country
+                    SELECT u_dni, u_name, u_lastName, u_age, u_email, u_address, u_country, is_admin
                     FROM users
                     WHERE u_dni = @u_dni
                 `);
@@ -140,6 +140,22 @@ class UserRepository extends IUserRepository {
             await pool.close();
         } catch (err) {
             console.error('SQL error in updateUserPassword', err);
+            throw err;
+        }
+    }
+
+    async LoadUsers(){
+        try {
+            let pool = await sql.connect(sqlConfig.config);
+            let result = await pool.request()
+                .query(`
+                SELECT u_name, u_lastName, u_email, is_admin
+                FROM users
+            `);
+            await pool.close();
+            return result.recordset;
+        } catch (err) {
+            console.error('SQL error in LoadUsers', err);
             throw err;
         }
     }

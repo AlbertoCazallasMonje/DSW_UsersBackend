@@ -29,6 +29,7 @@ router.delete('/delete', userController.DeleteAccount.bind(userController));
 router.post('/findUser', userController.FindUser.bind(userController));
 router.put('/passwordUpdate/:actionToken', userController.ResetPassword.bind(userController));
 router.post('/findByEmail', userController.FindUserByEmail.bind(userController));
+router.post('/adminLoadUsers', userController.AdminLoadUsers.bind(userController));
 
 // Actions
 router.post('/action', actionController.RequestActionToken.bind(actionController));

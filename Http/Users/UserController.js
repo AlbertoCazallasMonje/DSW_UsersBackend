@@ -9,6 +9,8 @@ const UserFinder = require("../../Application/Users/Finder/UserFinder");
 const ActionRepository = require("../../Infrastructure/Actions/ActionRepository");
 const UserPasswordReseter = require("../../Application/Users/Reseter/UserPasswordReseter");
 const UserEmailFinder = require("../../Application/Users/EmailFinder/UserEmailFinder");
+const UserLoader = require("../../Application/Users/Loader/UserLoader");
+
 
 class UserController {
     async Register(req, res) {
@@ -113,6 +115,18 @@ class UserController {
 
         } catch (error) {
             res.status(400).json({error: error.message});
+        }
+    }
+
+    async AdminLoadUsers(req, res) {
+        try {
+            const { sessionToken, actionToken } = req.body;
+            const userRepository = new UserRepository();
+            const userLoader = new UserLoader(userRepository);
+            const users = await userLoader.Execute({ sessionToken, actionToken });
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
         }
     }
 }
