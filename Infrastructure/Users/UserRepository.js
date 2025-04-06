@@ -80,7 +80,7 @@ class UserRepository extends IUserRepository {
             let result = await pool.request()
                 .input('u_email', sql.NVarChar(100), email)
                 .query(`
-                    SELECT u_dni, u_name, u_lastName, u_email, u_password
+                    SELECT u_dni, u_name, u_lastName, u_email, u_password, is_admin
                     FROM users
                     WHERE u_email = @u_email
                 `);
