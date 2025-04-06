@@ -27,6 +27,7 @@ class UserLogger{
         return {
             message: 'Login successful',
             sessionToken: sessionData.sessionToken,
+            is_admin: userRecord.is_admin
         };
     }
 
