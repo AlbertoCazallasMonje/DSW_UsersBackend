@@ -10,6 +10,8 @@ const ActionRepository = require("../../Infrastructure/Actions/ActionRepository"
 const UserPasswordReseter = require("../../Application/Users/Reseter/UserPasswordReseter");
 const UserEmailFinder = require("../../Application/Users/EmailFinder/UserEmailFinder");
 const UserLoader = require("../../Application/Users/Loader/UserLoader");
+const FrequentUsersFinder = require("../../Application/Users/FrequentFinder/FrequentUsersFinder");
+const UserBlocker = require("../../Application/Users/Blocker/UserBlocker");
 
 
 class UserController {
@@ -111,7 +113,7 @@ class UserController {
             const userEmailFinder = new UserEmailFinder(userRepository);
             const result = await userEmailFinder.Execute(sessionToken, findReceiverToken, email);
 
-            res.status(200).json({ u_dni: result });
+            res.status(200).json({u_dni: result});
 
         } catch (error) {
             res.status(400).json({error: error.message});
@@ -120,13 +122,39 @@ class UserController {
 
     async AdminLoadUsers(req, res) {
         try {
-            const { sessionToken, actionToken } = req.body;
+            const {sessionToken, actionToken} = req.body;
             const userRepository = new UserRepository();
             const userLoader = new UserLoader(userRepository);
-            const users = await userLoader.Execute({ sessionToken, actionToken });
+            const users = await userLoader.Execute({sessionToken, actionToken});
             res.status(200).json(users);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            res.status(400).json({error: error.message});
+        }
+    }
+
+    async GetFrequentUsers(req, res) {
+        try {
+            const {sessionToken, actionToken, limit} = req.body;
+
+            const userRepository = new UserRepository();
+            const frequentUsersUC = new FrequentUsersFinder(userRepository);
+            const users = await frequentUsersUC.Execute(sessionToken, actionToken, limit);
+
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(400).json({error: error.message});
+        }
+    }
+
+    async BlockUser(req, res) {
+        try {
+            const {sessionToken, actionToken, blockedDni} = req.body;
+            const userRepository = new UserRepository();
+            const blockUserUc = new UserBlocker(userRepository);
+            await blockUserUc.Execute(sessionToken, actionToken, blockedDni);
+            res.status(200).json({message: 'User blocked successfully.'});
+        } catch (error) {
+            res.status(400).json({error: error.message});
         }
     }
 }

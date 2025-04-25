@@ -30,6 +30,8 @@ router.post('/findUser', userController.FindUser.bind(userController));
 router.put('/passwordUpdate/:actionToken', userController.ResetPassword.bind(userController));
 router.post('/findByEmail', userController.FindUserByEmail.bind(userController));
 router.post('/adminLoadUsers', userController.AdminLoadUsers.bind(userController));
+router.post('/frequentUsers', userController.GetFrequentUsers.bind(userController));
+router.post('/blockUser', userController.BlockUser.bind(userController));
 
 // Actions
 router.post('/action', actionController.RequestActionToken.bind(actionController));

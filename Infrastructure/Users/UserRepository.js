@@ -62,7 +62,14 @@ class UserRepository extends IUserRepository {
             let result = await pool.request()
                 .input('u_dni', sql.NVarChar(9), dni)
                 .query(`
-                    SELECT u_dni, u_name, u_lastName, u_age, u_email, u_address, u_country, is_admin
+                    SELECT u_dni,
+                           u_name,
+                           u_lastName,
+                           u_age,
+                           u_email,
+                           u_address,
+                           u_country,
+                           is_admin
                     FROM users
                     WHERE u_dni = @u_dni
                 `);
@@ -98,7 +105,8 @@ class UserRepository extends IUserRepository {
             await pool.request()
                 .input('u_dni', sql.NVarChar(9), dni)
                 .query(`
-                    DELETE FROM users
+                    DELETE
+                    FROM users
                     WHERE u_dni = @u_dni
                 `);
             await pool.close();
@@ -108,13 +116,21 @@ class UserRepository extends IUserRepository {
         }
     }
 
-    async GetAllUserData(dni){
+    async GetAllUserData(dni) {
         try {
             let pool = await sql.connect(sqlConfig.config);
             let result = await pool.request()
                 .input('u_dni', sql.NVarChar(9), dni)
                 .query(`
-                    SELECT u_dni, u_name, u_lastName, u_age, u_email, u_password, u_address, u_country, is_admin
+                    SELECT u_dni,
+                           u_name,
+                           u_lastName,
+                           u_age,
+                           u_email,
+                           u_password,
+                           u_address,
+                           u_country,
+                           is_admin
                     FROM users
                     WHERE u_dni = @u_dni
                 `);
@@ -133,10 +149,10 @@ class UserRepository extends IUserRepository {
                 .input('u_dni', sql.NVarChar(9), dni)
                 .input('u_password', sql.NVarChar(100), newHashedPassword)
                 .query(`
-                UPDATE users
-                SET u_password = @u_password
-                WHERE u_dni = @u_dni
-            `);
+                    UPDATE users
+                    SET u_password = @u_password
+                    WHERE u_dni = @u_dni
+                `);
             await pool.close();
         } catch (err) {
             console.error('SQL error in updateUserPassword', err);
@@ -144,18 +160,65 @@ class UserRepository extends IUserRepository {
         }
     }
 
-    async LoadUsers(){
+    async LoadUsers() {
         try {
             let pool = await sql.connect(sqlConfig.config);
             let result = await pool.request()
                 .query(`
-                SELECT u_name, u_lastName, u_email, is_admin
-                FROM users
-            `);
+                    SELECT u_name, u_lastName, u_email, is_admin
+                    FROM users
+                `);
             await pool.close();
             return result.recordset;
         } catch (err) {
             console.error('SQL error in LoadUsers', err);
+            throw err;
+        }
+    }
+
+    async GetFrequentUsers(userDni, limit = 5) {
+        try {
+            const pool = await sql.connect(sqlConfig.config);
+            const result = await pool.request()
+                .input('user_dni', sql.NVarChar(9), userDni)
+                .input('limit', sql.Int, limit)
+                .query(`
+                    SELECT TOP(@limit)
+                        fu.frequent_dni       AS frequent_dni,
+                            fu.interaction_count AS interaction_count,
+                           u.u_name             AS u_name,
+                           u.u_lastName         AS u_lastName,
+                           u.u_email            AS u_email
+                    FROM frequent_users fu
+                             INNER JOIN users u
+                                        ON u.u_dni = fu.frequent_dni
+                    WHERE fu.u_dni = @user_dni
+                    ORDER BY fu.interaction_count DESC;
+                `);
+            await pool.close();
+            return result.recordset;
+        } catch (err) {
+            console.error('SQL error in GetFrequentUsers', err);
+            throw err;
+        }
+    }
+
+    async BlockUser(blockerDni, blockedDni) {
+        try {
+            let pool = await sql.connect(sqlConfig.config);
+            await pool.request()
+                .input('blocker_dni', sql.NVarChar(9), blockerDni)
+                .input('blocked_dni', sql.NVarChar(9), blockedDni)
+                .query(`
+                    INSERT INTO blocked (blocker_dni, blocked_dni)
+                    VALUES (@blocker_dni, @blocked_dni)
+                `);
+            await pool.close();
+        } catch (err) {
+            console.error('SQL error in BlockUser', err);
+            if (err.number === 2627) {
+                throw new Error('User is already blocked.');
+            }
             throw err;
         }
     }
