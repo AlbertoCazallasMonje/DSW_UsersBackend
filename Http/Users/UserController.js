@@ -148,10 +148,10 @@ class UserController {
 
     async BlockUser(req, res) {
         try {
-            const {sessionToken, actionToken, blockedDni} = req.body;
+            const {sessionToken, actionToken, blockedEmail} = req.body;
             const userRepository = new UserRepository();
             const blockUserUc = new UserBlocker(userRepository);
-            await blockUserUc.Execute(sessionToken, actionToken, blockedDni);
+            await blockUserUc.Execute(sessionToken, actionToken, blockedEmail);
             res.status(200).json({message: 'User blocked successfully.'});
         } catch (error) {
             res.status(400).json({error: error.message});
