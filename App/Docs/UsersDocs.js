@@ -351,3 +351,271 @@
  *       400:
  *         description: Invalid request data or tokens
  */
+
+/**
+ * @swagger
+ * /passwordUpdate/{actionToken}:
+ *   put:
+ *     summary: Reset password using an action token
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: actionToken
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Action token for password reset
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 example: "newSecurePassword123"
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Password successfully updated."
+ *       400:
+ *         description: Invalid token or request data
+ */
+
+/**
+ * @swagger
+ * /findByEmail:
+ *   post:
+ *     summary: Find a user’s DNI by email
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionToken:
+ *                 type: string
+ *                 example: "session-token-here"
+ *               findReceiverToken:
+ *                 type: string
+ *                 example: "action-token-here"
+ *               email:
+ *                 type: string
+ *                 example: "anotheruser@example.com"
+ *     responses:
+ *       200:
+ *         description: DNI returned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 u_dni:
+ *                   type: string
+ *                   example: "87654321B"
+ *       400:
+ *         description: Invalid tokens or email not found
+ */
+
+/**
+ * @swagger
+ * /adminLoadUsers:
+ *   post:
+ *     summary: Load full list of users (admin only)
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionToken:
+ *                 type: string
+ *                 example: "session-token-here"
+ *               actionToken:
+ *                 type: string
+ *                 example: "action-token-here"
+ *     responses:
+ *       200:
+ *         description: List of all users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   dni:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   age:
+ *                     type: integer
+ *                   email:
+ *                     type: string
+ *                   address:
+ *                     type: string
+ *                   country:
+ *                     type: string
+ *       400:
+ *         description: Invalid tokens or insufficient permissions
+ */
+
+/**
+ * @swagger
+ * /frequentUsers:
+ *   post:
+ *     summary: Get most frequent users
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionToken:
+ *                 type: string
+ *                 example: "session-token-here"
+ *               actionToken:
+ *                 type: string
+ *                 example: "action-token-here"
+ *               limit:
+ *                 type: integer
+ *                 example: 5
+ *     responses:
+ *       200:
+ *         description: List of most frequent users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   dni:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   email:
+ *                     type: string
+ *                   visitCount:
+ *                     type: integer
+ *       400:
+ *         description: Invalid tokens or parameters
+ */
+
+/**
+ * @swagger
+ * /blockUser:
+ *   post:
+ *     summary: Block a user by email
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionToken:
+ *                 type: string
+ *                 example: "session-token-here"
+ *               actionToken:
+ *                 type: string
+ *                 example: "action-token-here"
+ *               blockedEmail:
+ *                 type: string
+ *                 example: "userToBlock@example.com"
+ *     responses:
+ *       200:
+ *         description: User blocked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User blocked successfully."
+ *       400:
+ *         description: Invalid tokens or insufficient permissions
+ */
+
+/**
+ * @swagger
+ * /action/reset:
+ *   post:
+ *     summary: Request a password reset token
+ *     tags: [Actions]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "johndoe@example.com"
+ *               actionCode:
+ *                 type: string
+ *                 example: "RESET-PASSWORD"
+ *     responses:
+ *       200:
+ *         description: Reset token generated and emailed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Recovery token generated."
+ *                 token:
+ *                   type: string
+ *                   example: "reset-token-here"
+ *       400:
+ *         description: Email not registered or invalid request
+ */
+
+/**
+ * @swagger
+ * /action/resetValidate/{token}:
+ *   get:
+ *     summary: Validate a password reset token
+ *     tags: [Actions]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Password reset token to validate
+ *     responses:
+ *       200:
+ *         description: Reset token is valid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Token is valid"
+ *       400:
+ *         description: Invalid or expired token
+ */
